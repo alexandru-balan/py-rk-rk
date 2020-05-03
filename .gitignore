@@ -2,3 +2,4 @@
 ./build/
 ./dist/
 ./py_rk_rk.egg-info/
+./venv-pypy/
