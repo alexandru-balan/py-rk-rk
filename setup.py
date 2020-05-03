@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name='py-rk-rk',
-    version='2020.1.dev1',
+    version='2020.1',
     url='https://github.com/alexandru-balan/py-rk-rk',
     license='GPL-3.0-or-later',
     author='Alexandru Balan',
