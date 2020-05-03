@@ -19,19 +19,17 @@ def rek_rek(
         U: npy.ndarray,
         V: npy.ndarray,
         y: npy.ndarray,
-        iterations: int = 70_000,
-        beta: npy.ndarray = None
+        iterations: int = 100_000,
+        tolerance: float = pow(10, -4),
+        keepErrors: bool = False
 ) -> npy.ndarray:
     """
-
     :param U: A matrix with m rows and k columns
     :param V: A matrix with k rows and n columns
     :param y: A vector with m rows and 1 column
     :param iterations: The number of iterations you want the algorithm to run for
-    :param beta:
-        A matrix with n rows and 1 column.
-        If this parameter is given then the algorithm will compute the error against it and
-        retain it in the errors variable. You can later retrieve that variable for analysis.
+    :param tolerance:
+    :param keepErrors:
     :return: A matrix, b, with n rows and 1 column that approximately solves the system X*b = y, where
         X = U*V
     """
@@ -117,7 +115,9 @@ def rek_rek(
         b = b + ((x[chosen_V][0] - npy.array(V[chosen_V]).dot(b)[0]) / euclidean_V) * npy.array(V[chosen_V]).T
 
         # if beta parameter is given then save the error at each iteration
-        if beta is not None:
-            errors.append(pow(npy.linalg.norm(b - beta, 2), 2))
+        if keepErrors:
+            errors.append(pow(npy.linalg.norm(U.dot(V.dot(b)) - y, 2), 2))
+            if errors[i] <= tolerance:
+                break
 
     return b

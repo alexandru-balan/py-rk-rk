@@ -1,13 +1,11 @@
 import time
 
-import numpy as npy
-
-from algorithms import rk_alg, rek_alg
+from algorithms import rk_alg
 from generators import rk_gen
 
-m = 5
-n = 3
-k = 2
+m = 200
+n = 150
+k = 100
 
 if __name__ == '__main__':
     start_time = time.time_ns()
@@ -19,13 +17,11 @@ if __name__ == '__main__':
     X = U.dot(V)
     y = X.dot(beta)
 
-    beta = npy.linalg.lstsq(X, y, rcond=None)[0]
+    b = rk_alg.rk_rk(U, V, y, iterations=100_000, tolerance=pow(10, -10), keepErrors=True)
+    rk_alg.plot_error()
 
-    rek_alg.rek_rek(U, V, y, beta=beta, iterations=10000)
-    rek_alg.plot_error()
-
-    print(rek_alg.errors[0])
-    print(rek_alg.errors[len(rk_alg.errors) - 1])
+    print(rk_alg.errors[0])
+    print(rk_alg.errors[len(rk_alg.errors) - 1])
 
     end_time = time.time_ns()
 
