@@ -114,7 +114,7 @@ def rek_rek(
             U[chosen_U]).T
         b = b + ((x[chosen_V][0] - npy.array(V[chosen_V]).dot(b)[0]) / euclidean_V) * npy.array(V[chosen_V]).T
 
-        # if beta parameter is given then save the error at each iteration
+        # if keepErrors parameter is given as True then save the error at each iteration
         if keepErrors:
             errors.append(pow(npy.linalg.norm(U.dot(V.dot(b)) - y, 2), 2))
             if errors[i] <= tolerance:
