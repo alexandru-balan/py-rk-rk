@@ -78,8 +78,7 @@ def rk_rk(U: npy.ndarray,
 
     # STEP 3.
     # Repeating the same process until we go insane
-    i = 0
-    while True:
+    for i in range(iterations):
         chosen_U = __choose_row(probs_U)
         chosen_V = __choose_row(probs_V)
 
@@ -96,6 +95,5 @@ def rk_rk(U: npy.ndarray,
             errors.append(pow(npy.linalg.norm(err2 - y, 2), 2))
             if errors[i] <= tolerance:
                 break
-        i += 1
 
     return b
