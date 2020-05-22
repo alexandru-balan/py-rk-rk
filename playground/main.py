@@ -17,7 +17,7 @@ if __name__ == '__main__':
     X = U.dot(V)
     y = X.dot(beta)
 
-    b = rek_alg.rek_rek(U, V, y, iterations=1_000_000, tolerance=pow(10, -4), keepErrors=True)
+    b = rek_alg.rk_rek(U, V, y, iterations=1_000_000, tolerance=pow(10, -4), keepErrors=True)
     # rek_alg.plot_error()
 
     print(rek_alg.errors[0])

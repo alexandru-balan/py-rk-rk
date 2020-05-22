@@ -15,7 +15,7 @@ def plot_error():
     pyplot.show()
 
 
-def rek_rek(
+def rk_rek(
         U: npy.ndarray,
         V: npy.ndarray,
         y: npy.ndarray,
