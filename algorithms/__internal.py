@@ -4,23 +4,25 @@ import numpy as npy
 
 
 class __ProbabilityThread(threading.Thread):
-    def __init__(self, frobenius: float, row: []):
+    def __init__(self, frobenius: float, rows: npy.ndarray):
         threading.Thread.__init__(self)
         self.frobenius = frobenius
-        self.row = row
-        self.probability = 0.0
+        self.rows = rows
+        self.probability = []
+        self.num_rows = len(rows)
 
     def run(self) -> None:
-        self.probability = self.__compute_row_probability()
+        for i in range(self.num_rows):
+            self.probability.append(self.__compute_row_probability(self.rows[i]))
 
-    def __compute_row_probability(self) -> float:
+    def __compute_row_probability(self, row: []) -> float:
         """
         This method is used to compute the probability of selecting a row as described in
         the RK-RK algorithm
 
         :returns: probability = squared euclidean of row / squared frobenius
         """
-        euclidean = pow(npy.linalg.norm(self.row, 2), 2)
+        euclidean = pow(npy.linalg.norm(row, 2), 2)
         return euclidean / self.frobenius
 
 

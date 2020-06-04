@@ -18,7 +18,7 @@ if __name__ == '__main__':
     y = X.dot(beta)
 
     b = rek_alg.rk_rek(U, V, y, iterations=1_000_000, tolerance=pow(10, -4), keepErrors=True)
-    # rek_alg.plot_error()
+    rek_alg.plot_error()
 
     print(rek_alg.errors[0])
     print(rek_alg.errors[len(rek_alg.errors) - 1])

@@ -5,6 +5,8 @@ from algorithms.__internal import __ProbabilityThread, __choose_row
 
 errors = []
 
+THREAD_NUMBER = 8
+
 
 def plot_error():
     x = range(len(errors))
@@ -52,13 +54,19 @@ def rk_rk(U: npy.ndarray,
     threads_U = []
     threads_V = []
 
-    for i in range(rows_U):  # Starting the threads for computing the probabilities of U's rows
-        thread = __ProbabilityThread(frobenius_U, U[i])
+    for i in range(0, rows_U, THREAD_NUMBER):  # Starting the threads for computing the probabilities of U's rows
+        if i <= rows_U - THREAD_NUMBER:
+            thread = __ProbabilityThread(frobenius_U, U[i:i + THREAD_NUMBER])
+        else:
+            thread = __ProbabilityThread(frobenius_U, U[i:])
         thread.start()
         threads_U.append(thread)
 
-    for i in range(rows_V):  # Starting the threads for computing the probabilities of V's rows
-        thread = __ProbabilityThread(frobenius_V, V[i])
+    for i in range(0, rows_V, THREAD_NUMBER):  # Starting the threads for computing the probabilities of V's rows
+        if i <= rows_V - THREAD_NUMBER:
+            thread = __ProbabilityThread(frobenius_V, V[i:i + THREAD_NUMBER])
+        else:
+            thread = __ProbabilityThread(frobenius_V, V[i:])
         thread.start()
         threads_V.append(thread)
 
@@ -71,10 +79,12 @@ def rk_rk(U: npy.ndarray,
 
     # Retrieving the results from the threads
     for thread in threads_U:
-        probs_U.append(thread.probability)
+        for probability in thread.probability:
+            probs_U.append(probability)
 
     for thread in threads_V:
-        probs_V.append(thread.probability)
+        for probability in thread.probability:
+            probs_V.append(probability)
 
     # STEP 3.
     # Repeating the same process until we go insane

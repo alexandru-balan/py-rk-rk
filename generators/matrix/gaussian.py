@@ -2,6 +2,8 @@ import threading
 
 import numpy as npy
 
+THREAD_NUMBER = 8
+
 
 class __NumberGeneratingThread(threading.Thread):
     """
@@ -14,17 +16,20 @@ class __NumberGeneratingThread(threading.Thread):
     - mean: float -- A float representing the median value of the distribution
     - sigma: float -- The deviation
     - sample_size -- How many numbers you want to generate
+    - nb_rows -- The number of rows to generate
     """
 
-    def __init__(self, mean, sigma, sample_size):
+    def __init__(self, mean, sigma, sample_size, nb_rows):
         threading.Thread.__init__(self)
         self.numbers = []
         self.mean = mean
         self.sigma = sigma
         self.sample_size = sample_size
+        self.nb_rows = nb_rows
 
     def run(self) -> None:
-        self.numbers = npy.random.normal(self.mean, self.sigma, self.sample_size)
+        for i in range(self.nb_rows):
+            self.numbers.append(npy.random.normal(self.mean, self.sigma, self.sample_size))
 
 
 def get_mat_from_normal_dist(rows: int, columns: int, mu: float = 0.0, sigma: float = 1.0) -> npy.array:
@@ -48,8 +53,11 @@ def get_mat_from_normal_dist(rows: int, columns: int, mu: float = 0.0, sigma: fl
     threads = []
 
     # Creating a bunch of threads that generate numbers and starting them
-    for i in range(rows):
-        thread = __NumberGeneratingThread(mu, sigma, columns)
+    for i in range(0, rows, THREAD_NUMBER):
+        if i <= rows - THREAD_NUMBER:
+            thread = __NumberGeneratingThread(mu, sigma, columns, THREAD_NUMBER)
+        else:
+            thread = __NumberGeneratingThread(mu, sigma, columns, rows - i)
         threads.append(thread)
         thread.start()
 
@@ -58,7 +66,11 @@ def get_mat_from_normal_dist(rows: int, columns: int, mu: float = 0.0, sigma: fl
         thr.join()
 
     # After they finished we get the generated values, pack them into an array and return it
-    for i in range(rows):
-        matrix[i] = threads[i].numbers
+    row_num = 0
+
+    for thread in threads:
+        for row in thread.numbers:
+            matrix[row_num] = row
+            row_num += 1
 
     return matrix
